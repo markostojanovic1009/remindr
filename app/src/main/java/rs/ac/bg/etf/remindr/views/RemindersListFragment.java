@@ -1,20 +1,29 @@
 package rs.ac.bg.etf.remindr.views;
 
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.NavHostController;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import rs.ac.bg.etf.remindr.R;
 import rs.ac.bg.etf.remindr.adapters.RemindersAdapter;
 import rs.ac.bg.etf.remindr.databinding.RemindersListFragmentBinding;
 import rs.ac.bg.etf.remindr.viewmodels.RemindersListViewModel;
@@ -41,6 +50,52 @@ public class RemindersListFragment extends Fragment {
         binding.reminderList.setAdapter(adapter);
         binding.setClickListener(v -> NavigateToDetails());
         SubscribeUI(adapter);
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+            @Override
+            public boolean onMove(
+                    RecyclerView recyclerView,
+                    RecyclerView.ViewHolder viewHolder,
+                    RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+                //Remove swiped item from list and notify the RecyclerView
+                int position = viewHolder.getAdapterPosition();
+                viewModel_.RemoveReminder(position);
+            }
+
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public void onChildDraw(@NonNull Canvas c,
+                                    @NonNull RecyclerView recyclerView,
+                                    @NonNull RecyclerView.ViewHolder viewHolder,
+                                    float dX,
+                                    float dY,
+                                    int actionState,
+                                    boolean isCurrentlyActive)
+            {
+                c.clipRect(0f, viewHolder.itemView.getTop(), dX, viewHolder.itemView.getBottom());
+                c.drawColor(Color.GRAY);
+
+                int textMargin = 10;
+
+                Drawable trashBinIcon = getResources().getDrawable(R.drawable.ic_baseline_delete_24,null);
+                trashBinIcon.setBounds(new Rect(
+                        textMargin,
+                        viewHolder.itemView.getTop() + textMargin,
+                        textMargin + trashBinIcon.getIntrinsicWidth(),
+                        viewHolder.itemView.getTop() + trashBinIcon.getIntrinsicHeight() + textMargin));
+                trashBinIcon.draw(c);
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(binding.reminderList);
 
         return binding.getRoot();
     }

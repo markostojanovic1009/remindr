@@ -1,8 +1,10 @@
 package rs.ac.bg.etf.remindr.viewmodels;
 
 import android.app.Application;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -17,6 +19,7 @@ public class RemindersListViewModel extends AndroidViewModel {
     private final ReminderRepository reminderRepository_;
     private LiveData<List<Reminder>> reminders_;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public RemindersListViewModel(@NonNull Application application) {
         super(application);
         reminderRepository_ = new ReminderRepository(application);
@@ -28,8 +31,9 @@ public class RemindersListViewModel extends AndroidViewModel {
         return reminders_;
     }
 
-    public void Insert(Reminder reminder)
+    public void RemoveReminder(int position)
     {
-        reminderRepository_.InsertReminder(reminder);
+        Reminder reminder = reminders_.getValue().get(position);
+        reminderRepository_.DeleteReminder(reminder);
     }
 }

@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.aigestudio.wheelpicker.WheelPicker;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,11 +53,27 @@ public class NewReminderFragment extends Fragment {
 
         binding.hourWheelPicker.setData(CreateHourListForPicker());
         binding.hourWheelPicker.setOnItemSelectedListener((WheelPicker picker, Object data, int position) -> viewModel_.SetSelectedHour(position));
+        int hour = LocalDateTime.now().getHour();
+        binding.hourWheelPicker.setSelectedItemPosition(hour);
 
         binding.minuteWheelPicker.setData(CreateMinuteListForPicker());
         binding.minuteWheelPicker.setOnItemSelectedListener((WheelPicker picker, Object data, int position) -> viewModel_.SetSelectedMinute(position));
+        binding.minuteWheelPicker.setSelectedItemPosition(LocalDateTime.now().getMinute());
 
-        binding.button.setOnClickListener((view) -> viewModel_.CreateReminder());
+        binding.button.setOnClickListener((view) ->
+        {
+            String error = viewModel_.ValidateReminder();
+            if (error.isEmpty())
+            {
+                viewModel_.CreateReminder();
+                binding.createErrorText.setVisibility(View.GONE);
+            }
+            else
+            {
+                binding.createErrorText.setText(error);
+                binding.createErrorText.setVisibility(View.VISIBLE);
+            }
+        });
 
         viewModel_.GetRequestStatus().observe(getViewLifecycleOwner(), persistenceRequest -> {
             if (persistenceRequest.IsSuccess)

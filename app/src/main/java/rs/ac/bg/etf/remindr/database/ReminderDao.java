@@ -7,19 +7,19 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import rs.ac.bg.etf.remindr.models.Reminder;
 
 @Dao
 public interface ReminderDao {
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void Insert(Reminder reminder);
 
     @Delete
     void Delete(Reminder reminder);
 
     @Query("SELECT * FROM reminders WHERE Time > :laterThanTime ORDER BY Time ASC")
-    LiveData<List<Reminder>> GetAllRemindersLaterThan(Date laterThanTime);
+    LiveData<List<Reminder>> GetAllRemindersLaterThan(LocalDateTime laterThanTime);
 }
