@@ -59,12 +59,6 @@ public class NewReminderViewModel extends AndroidViewModel {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void SetSelectedDate(LocalDate date)
     {
-        /*reminder_.Time = LocalDateTime.of(
-                date,
-                date.atTime(
-                    reminder_.Time.getHour(),
-                    reminder_.Time.getMinute()).toLocalTime());
-         */
         reminder_.Time = reminder_.Time.withDayOfYear(date.getDayOfYear());
         reminderData_.setValue(reminder_);
     }
@@ -78,7 +72,7 @@ public class NewReminderViewModel extends AndroidViewModel {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void SetSelectedMinute(int minutes) {
-        reminder_.Time = reminder_.Time.withHour(minutes);
+        reminder_.Time = reminder_.Time.withMinute(minutes);
         reminderData_.setValue(reminder_);
     }
 }
