@@ -14,6 +14,8 @@ public class NotificationReceiver extends BroadcastReceiver
     public static final String NOTIFICATION = "NOTIFICATION";
     public static final String NOTIFICATION_ID = "NOTIFICATION-ID";
 
+
+
     @Override
     public void onReceive(Context context, Intent intent)
     {

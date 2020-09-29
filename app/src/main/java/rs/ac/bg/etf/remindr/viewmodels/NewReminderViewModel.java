@@ -34,7 +34,11 @@ public class NewReminderViewModel extends AndroidViewModel {
         super(application);
         reminderRepository_ = new ReminderRepository(application);
         reminder_ = new Reminder();
-        reminder_.Time = LocalDateTime.now().withHour(0).withMinute(0);
+        reminder_.Time = LocalDateTime.now()
+                .withHour(0)
+                .withMinute(0)
+                .withSecond(0)
+                .withNano(0);
         reminderData_ = new MutableLiveData<>(reminder_);
         createRequest_ = reminderRepository_.GetRequestStatus();
         authorizationToken_ = application

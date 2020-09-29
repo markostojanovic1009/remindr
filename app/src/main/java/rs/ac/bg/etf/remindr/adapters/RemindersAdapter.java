@@ -1,14 +1,19 @@
 package rs.ac.bg.etf.remindr.adapters;
 
 import android.annotation.SuppressLint;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import rs.ac.bg.etf.remindr.databinding.RemindersListItemBinding;
 import rs.ac.bg.etf.remindr.models.Reminder;
@@ -40,8 +45,13 @@ public class RemindersAdapter extends ListAdapter<Reminder, RecyclerView.ViewHol
             binding_ = binding;
         }
 
-        public void Bind(Reminder reminder)
+        public void Bind(Reminder reminder, String header)
         {
+            if (header != null)
+            {
+                binding_.setHeaderText(header);
+                binding_.headerTextView.setVisibility(View.VISIBLE);
+            }
             binding_.setReminder(reminder);
             binding_.executePendingBindings();
         }
@@ -67,9 +77,40 @@ public class RemindersAdapter extends ListAdapter<Reminder, RecyclerView.ViewHol
                     false));
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private String GenerateHeader(int position)
+    {
+        if (position == 0 ||
+                getItem(position).Time.getDayOfYear() != getItem(position - 1).Time.getDayOfYear())
+        {
+            LocalDateTime time = getItem(position).Time;
+            LocalDateTime currentTime = LocalDateTime.now();
+            if (time.getDayOfYear() == currentTime.getDayOfYear())
+            {
+                return "Today";
+            }
+            else if (time.getDayOfYear() == currentTime.getDayOfYear() + 1)
+            {
+                return "Tomorrow";
+            }
+            else
+            {
+                return time.format(DateTimeFormatter.ofPattern("LLLL dd, yyyy"));
+            }
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Reminder reminder = getItem(position);
-        ((ReminderViewHolder) holder).Bind(reminder);
+
+        String header = GenerateHeader(position);
+
+        ((ReminderViewHolder) holder).Bind(reminder, header);
     }
 }

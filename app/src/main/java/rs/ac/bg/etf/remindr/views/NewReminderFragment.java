@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +37,7 @@ import rs.ac.bg.etf.remindr.database.Converters;
 import rs.ac.bg.etf.remindr.databinding.NewReminderFragmentBinding;
 import rs.ac.bg.etf.remindr.models.Reminder;
 import rs.ac.bg.etf.remindr.notifications.NotificationReceiver;
+import rs.ac.bg.etf.remindr.notifications.TextToSpeechProvider;
 import rs.ac.bg.etf.remindr.viewmodels.NewReminderViewModel;
 import rs.ac.bg.etf.remindr.viewmodels.RemindersListViewModel;
 
@@ -110,7 +112,6 @@ public class NewReminderFragment extends Fragment {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
         long notificationTime = Converters.dateToTimestamp(viewModel_.GetReminderData().getValue().Time);
-        Log.w("DATECONVERSIONTAG", "" + notificationTime);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
     }
 

@@ -10,6 +10,7 @@ import androidx.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity(tableName = "reminders")
 public class Reminder {
@@ -26,6 +27,13 @@ public class Reminder {
 
     @SerializedName(value = "time")
     public LocalDateTime Time;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String GetTimeFormatted()
+    {
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("HH:mm");
+        return Time.format(format);
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String Validate()

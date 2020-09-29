@@ -55,6 +55,7 @@ public class RemindersListFragment extends Fragment {
         if (!viewModel_.IsUserLoggedIn())
         {
             controller.navigate(R.id.loginFragment);
+            return null;
         }
 
         RemindersAdapter adapter = RemindersAdapter.Create();
