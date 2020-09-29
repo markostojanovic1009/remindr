@@ -20,6 +20,9 @@ public interface ReminderDao {
     @Delete
     void Delete(Reminder reminder);
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void InsertAll(List<Reminder> reminders);
+
     @Query("SELECT * FROM reminders WHERE Time > :laterThanTime ORDER BY Time ASC")
     LiveData<List<Reminder>> GetAllRemindersLaterThan(LocalDateTime laterThanTime);
 }

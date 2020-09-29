@@ -2,6 +2,7 @@ package rs.ac.bg.etf.remindr.views;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+import androidx.lifecycle.SavedStateViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.app.AlarmManager;
@@ -36,6 +37,7 @@ import rs.ac.bg.etf.remindr.databinding.NewReminderFragmentBinding;
 import rs.ac.bg.etf.remindr.models.Reminder;
 import rs.ac.bg.etf.remindr.notifications.NotificationReceiver;
 import rs.ac.bg.etf.remindr.viewmodels.NewReminderViewModel;
+import rs.ac.bg.etf.remindr.viewmodels.RemindersListViewModel;
 
 public class NewReminderFragment extends Fragment {
 
@@ -50,12 +52,13 @@ public class NewReminderFragment extends Fragment {
                              @Nullable Bundle savedInstanceState)
     {
         NewReminderFragmentBinding binding = NewReminderFragmentBinding.inflate(inflater, container, false);
-        viewModel_ = ViewModelProvider.AndroidViewModelFactory
-                .getInstance(getActivity().getApplication())
-                .create(NewReminderViewModel.class);
+        viewModel_ = new ViewModelProvider(
+                this,
+                new SavedStateViewModelFactory(getActivity().getApplication(),this))
+                .get(NewReminderViewModel.class);
 
         binding.setViewModel(viewModel_);
-        binding.setLifecycleOwner(this);
+        binding.setLifecycleOwner(getViewLifecycleOwner());
 
         binding.dateWheelPicker.setData(CreateDateListForPicker());
         binding.dateWheelPicker.setOnItemSelectedListener((WheelPicker picker, Object data, int position) -> viewModel_.SetSelectedDate(LocalDate.now().plusDays(position)));

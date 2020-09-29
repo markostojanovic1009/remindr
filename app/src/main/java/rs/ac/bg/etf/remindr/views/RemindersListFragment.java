@@ -11,10 +11,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.SavedStateViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.NavHostController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +28,7 @@ import android.view.ViewGroup;
 
 import rs.ac.bg.etf.remindr.R;
 import rs.ac.bg.etf.remindr.adapters.RemindersAdapter;
+import rs.ac.bg.etf.remindr.common.Constants;
 import rs.ac.bg.etf.remindr.databinding.RemindersListFragmentBinding;
 import rs.ac.bg.etf.remindr.viewmodels.RemindersListViewModel;
 
@@ -42,9 +46,16 @@ public class RemindersListFragment extends Fragment {
                              @Nullable Bundle savedInstanceState)
     {
         RemindersListFragmentBinding binding = RemindersListFragmentBinding.inflate(inflater, container, false);
-        viewModel_ = ViewModelProvider.AndroidViewModelFactory
-                .getInstance(getActivity().getApplication())
-                .create(RemindersListViewModel.class);
+        viewModel_ = new ViewModelProvider(
+         this,
+                new SavedStateViewModelFactory(getActivity().getApplication(),this))
+                .get(RemindersListViewModel.class);
+
+        NavController controller = NavHostFragment.findNavController(this);
+        if (!viewModel_.IsUserLoggedIn())
+        {
+            controller.navigate(R.id.loginFragment);
+        }
 
         RemindersAdapter adapter = RemindersAdapter.Create();
         binding.reminderList.setAdapter(adapter);

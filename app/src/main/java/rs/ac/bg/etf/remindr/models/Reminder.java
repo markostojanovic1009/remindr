@@ -7,18 +7,24 @@ import androidx.annotation.RequiresApi;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.time.LocalDateTime;
 
 @Entity(tableName = "reminders")
 public class Reminder {
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     @NonNull
-    public long Id = 0;
+    @SerializedName(value = "id")
+    public long Id;
 
+    @SerializedName(value = "title")
     public String Title;
 
+    @SerializedName(value = "description")
     public String Description;
 
+    @SerializedName(value = "time")
     public LocalDateTime Time;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
