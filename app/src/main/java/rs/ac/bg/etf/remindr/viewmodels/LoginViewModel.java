@@ -18,7 +18,6 @@ import rs.ac.bg.etf.remindr.repositories.UserRepository;
 
 public class LoginViewModel extends AndroidViewModel {
 
-    private final SavedStateHandle savedStateHandle_;
     private final UserRepository userRepository_;
     private final SharedPreferences preferences_;
     private LiveData<JWToken> token_;
@@ -28,11 +27,12 @@ public class LoginViewModel extends AndroidViewModel {
     public LoginViewModel(Application application, SavedStateHandle savedStateHandle)
     {
         super(application);
-        savedStateHandle_ = savedStateHandle;
         userRepository_ = new UserRepository();
         token_ = userRepository_.GetJWTokenData();
         user_ = new MutableLiveData<>(new User());
-        preferences_ = application.getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        preferences_ = application.getSharedPreferences(
+                Constants.SHARED_PREFERENCES_NAME,
+                Context.MODE_PRIVATE);
     }
 
     public MutableLiveData<User> GetUser() { return user_; }
@@ -49,6 +49,7 @@ public class LoginViewModel extends AndroidViewModel {
 
     public void SaveToken(String token) {
         SharedPreferences.Editor editor = preferences_.edit();
+        editor.putString(Constants.USER_EMAIL_KEY, user_.getValue().Email);
         editor.putString(Constants.AUTHORIZATION_TOKEN_KEY, token);
         editor.commit();
     }

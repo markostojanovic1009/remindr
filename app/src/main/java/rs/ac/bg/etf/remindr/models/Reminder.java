@@ -5,12 +5,15 @@ import android.os.Build;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity(tableName = "reminders")
 public class Reminder {
@@ -27,6 +30,10 @@ public class Reminder {
 
     @SerializedName(value = "time")
     public LocalDateTime Time;
+
+    @SerializedName(value = "userEmails")
+    @Ignore
+    public List<String> UserEmails = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public String GetTimeFormatted()

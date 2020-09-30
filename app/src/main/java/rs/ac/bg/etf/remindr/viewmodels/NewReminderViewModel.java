@@ -13,6 +13,7 @@ import androidx.lifecycle.SavedStateHandle;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import rs.ac.bg.etf.remindr.common.Constants;
 import rs.ac.bg.etf.remindr.models.Reminder;
@@ -53,6 +54,13 @@ public class NewReminderViewModel extends AndroidViewModel {
 
     public void CreateReminder()
     {
+        String userEmail = getApplication()
+                .getSharedPreferences(Constants.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+                .getString(Constants.USER_EMAIL_KEY, "");
+        if (!userEmail.isEmpty())
+        {
+            reminder_.UserEmails.add(userEmail);
+        }
         reminderRepository_.InsertReminder(reminder_, authorizationToken_);
     }
 
@@ -86,4 +94,10 @@ public class NewReminderViewModel extends AndroidViewModel {
         reminder_.Time = reminder_.Time.withMinute(minutes);
         reminderData_.setValue(reminder_);
     }
+
+    public void AddPeopleToReminder(ArrayList<String> emails_) {
+        reminder_.UserEmails = emails_;
+        reminderData_.setValue(reminder_);
+    }
+
 }

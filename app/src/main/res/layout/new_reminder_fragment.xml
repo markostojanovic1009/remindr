@@ -35,14 +35,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
-            android:text="@={viewModel.GetReminderData().Description}"
             android:id="@+id/editTextTextPersonName2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="291dp"
+            android:layout_height="108dp"
             android:layout_marginTop="20dp"
             android:ems="10"
             android:hint="Description"
-            android:inputType="textPersonName"
+            android:inputType="textMultiLine"
+            android:text="@={viewModel.GetReminderData().Description}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.497"
             app:layout_constraintStart_toStartOf="parent"
@@ -52,7 +52,8 @@
             android:id="@+id/dateWheelPicker"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            aigestudio:wheel_selected_item_text_color="#000000"
+            aigestudio:wheel_selected_item_text_color="@color/colorAccent"
+            aigestudio:wheel_visible_item_count="5"
             android:layout_marginStart="16dp"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="20dp"
@@ -64,8 +65,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            aigestudio:wheel_atmospheric="true"
-            aigestudio:wheel_selected_item_text_color="#000000"
+            aigestudio:wheel_selected_item_text_color="@color/colorAccent"
+            aigestudio:wheel_visible_item_count="5"
             app:layout_constraintEnd_toStartOf="@+id/minuteWheelPicker"
             app:layout_constraintHorizontal_bias="0.438"
             app:layout_constraintStart_toEndOf="@+id/dateWheelPicker"
@@ -76,28 +77,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            aigestudio:wheel_selected_item_text_color="#000000"
+            aigestudio:wheel_selected_item_text_color="@color/colorAccent"
+            aigestudio:wheel_visible_item_count="5"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.933"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/editTextTextPersonName2" />
 
-        <TextView
-            android:text="@{viewModel.GetReminderData().Time.toString()}"
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="40dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.526"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/hourWheelPicker" />
-
         <Button
             android:id="@+id/button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="36dp"
+            android:layout_marginBottom="16dp"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:text="Create"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -109,11 +101,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
+            android:textColor="@android:color/holo_red_light"
             android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/addPeopleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:text="Add others"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/hourWheelPicker" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

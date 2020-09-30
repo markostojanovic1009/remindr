@@ -45,13 +45,13 @@ public class ReminderRepository {
         cachedAt_ = 0;
     }
 
-    public LiveData<List<Reminder>> GetAllActiveReminders(String authorizationToken)
+    public LiveData<List<Reminder>> GetAllActiveReminders(String authorizationToken, String userEmail)
     {
         long currentTime = System.currentTimeMillis();
         if (currentTime > cachedAt_ + Constants.CACHE_TIMEOUT_IN_MILIS)
         {
             cachedAt_ = currentTime;
-            webService_.GetRemindersLaterThan(authorizationToken, currentTime)
+            webService_.GetRemindersLaterThan(authorizationToken, userEmail, currentTime)
                     .enqueue(new Callback<List<Reminder>>() {
                 @Override
                 public void onResponse(Call<List<Reminder>> call, Response<List<Reminder>> response) {

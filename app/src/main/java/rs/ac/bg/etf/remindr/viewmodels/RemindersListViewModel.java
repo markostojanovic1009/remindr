@@ -38,7 +38,7 @@ public class RemindersListViewModel extends AndroidViewModel {
     {
         if (reminders_ == null)
         {
-            reminders_ = reminderRepository_.GetAllActiveReminders(token_);
+            reminders_ = reminderRepository_.GetAllActiveReminders(token_, preferences_.getString(Constants.USER_EMAIL_KEY, ""));
         }
         return reminders_;
     }

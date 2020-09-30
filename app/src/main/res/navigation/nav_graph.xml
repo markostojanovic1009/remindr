@@ -19,12 +19,25 @@
         android:id="@+id/newReminderFragment"
         android:name="rs.ac.bg.etf.remindr.views.NewReminderFragment"
         android:label="new_reminder_fragment"
-        tools:layout="@layout/new_reminder_fragment" />
+        tools:layout="@layout/new_reminder_fragment" >
+        <action
+            android:id="@+id/action_newReminderFragment_to_addPeopleDialog2"
+            app:destination="@id/addPeopleDialog" />
+    </fragment>
 
     <fragment
         android:id="@+id/loginFragment"
         android:name="rs.ac.bg.etf.remindr.views.LoginFragment"
         android:label="login_fragment"
         tools:layout="@layout/login_fragment" />
+
+    <dialog android:id="@+id/addPeopleDialog"
+        android:name="rs.ac.bg.etf.remindr.views.AddPeopleDialogFragment"
+        android:label="add_people_dialog"
+        tools:layout="@layout/add_people_dialog_fragment">
+        <argument
+            android:name="emailList"
+            app:argType="string[]" />
+    </dialog>
 
 </navigation>

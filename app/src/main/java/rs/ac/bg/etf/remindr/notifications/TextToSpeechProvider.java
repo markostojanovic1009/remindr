@@ -2,7 +2,6 @@ package rs.ac.bg.etf.remindr.notifications;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
-import android.util.Log;
 
 import java.util.Locale;
 
@@ -15,7 +14,7 @@ public class TextToSpeechProvider {
         instance_ = new TextToSpeech(
                 context,
                 status -> {
-                    GetInstance(context).setLanguage(Locale.ENGLISH);
+                    instance_.setLanguage(Locale.ENGLISH);
                 });
     }
 

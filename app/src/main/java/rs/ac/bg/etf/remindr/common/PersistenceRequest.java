@@ -10,9 +10,4 @@ public class PersistenceRequest
         IsSuccess = true;
     }
 
-    public PersistenceRequest(String error)
-    {
-        Error = error;
-        IsSuccess = false;
-    }
 }

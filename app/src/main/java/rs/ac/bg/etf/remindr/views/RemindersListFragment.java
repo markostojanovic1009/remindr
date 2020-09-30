@@ -13,11 +13,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.SavedStateViewModelFactory;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavBackStackEntry;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
-import androidx.navigation.NavHostController;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,17 +25,12 @@ import android.view.ViewGroup;
 
 import rs.ac.bg.etf.remindr.R;
 import rs.ac.bg.etf.remindr.adapters.RemindersAdapter;
-import rs.ac.bg.etf.remindr.common.Constants;
 import rs.ac.bg.etf.remindr.databinding.RemindersListFragmentBinding;
 import rs.ac.bg.etf.remindr.viewmodels.RemindersListViewModel;
 
 public class RemindersListFragment extends Fragment {
 
     private RemindersListViewModel viewModel_;
-
-    public static RemindersListFragment newInstance() {
-        return new RemindersListFragment();
-    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.fragment.NavHostFragment;
 
 import android.speech.tts.TextToSpeech;
@@ -33,18 +34,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import rs.ac.bg.etf.remindr.R;
+import rs.ac.bg.etf.remindr.common.Constants;
 import rs.ac.bg.etf.remindr.database.Converters;
 import rs.ac.bg.etf.remindr.databinding.NewReminderFragmentBinding;
 import rs.ac.bg.etf.remindr.models.Reminder;
 import rs.ac.bg.etf.remindr.notifications.NotificationReceiver;
-import rs.ac.bg.etf.remindr.notifications.TextToSpeechProvider;
 import rs.ac.bg.etf.remindr.viewmodels.NewReminderViewModel;
-import rs.ac.bg.etf.remindr.viewmodels.RemindersListViewModel;
 
 public class NewReminderFragment extends Fragment {
 
-    public static final String DEFAULT_NOTIFICATION_CHANNEL_ID = "DEFAULT_NOTIFICATION_CHANNEL_ID";
-    public static final String NOTIFICATION_CHANNEL_ID = "10001";
     private NewReminderViewModel viewModel_;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -55,7 +53,7 @@ public class NewReminderFragment extends Fragment {
     {
         NewReminderFragmentBinding binding = NewReminderFragmentBinding.inflate(inflater, container, false);
         viewModel_ = new ViewModelProvider(
-                this,
+                requireActivity(),
                 new SavedStateViewModelFactory(getActivity().getApplication(),this))
                 .get(NewReminderViewModel.class);
 
@@ -67,8 +65,7 @@ public class NewReminderFragment extends Fragment {
 
         binding.hourWheelPicker.setData(CreateHourListForPicker());
         binding.hourWheelPicker.setOnItemSelectedListener((WheelPicker picker, Object data, int position) -> viewModel_.SetSelectedHour(position));
-        int hour = LocalDateTime.now().getHour();
-        binding.hourWheelPicker.setSelectedItemPosition(hour);
+        binding.hourWheelPicker.setSelectedItemPosition(LocalDateTime.now().getHour());
 
         binding.minuteWheelPicker.setData(CreateMinuteListForPicker());
         binding.minuteWheelPicker.setOnItemSelectedListener((WheelPicker picker, Object data, int position) -> viewModel_.SetSelectedMinute(position));
@@ -89,10 +86,20 @@ public class NewReminderFragment extends Fragment {
             }
         });
 
+        binding.addPeopleButton.setOnClickListener((v) -> {
+            List<String> emails = viewModel_.GetReminderData().getValue().UserEmails;
+            String[] args = new String[emails.size()];
+            args = emails.toArray(args);
+            NavDirections directions = NewReminderFragmentDirections.actionNewReminderFragmentToAddPeopleDialog2(args);
+            NavController controller = NavHostFragment.findNavController(this);
+            controller.navigate(directions);
+        });
+
         viewModel_.GetRequestStatus().observe(getViewLifecycleOwner(), persistenceRequest -> {
             if (persistenceRequest.IsSuccess)
             {
                 ScheduleNotification();
+                getActivity().getViewModelStore().clear();
                 NavController controller = NavHostFragment.findNavController(this);
                 controller.popBackStack();
             }
@@ -107,11 +114,18 @@ public class NewReminderFragment extends Fragment {
         Notification notification = CreateReminderNotification();
 
         Intent notificationIntent = new Intent(getContext(), NotificationReceiver.class);
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION_ID , 1 );
-        notificationIntent.putExtra(NotificationReceiver.NOTIFICATION, notification);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(getContext(), 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notificationIntent.putExtra(Constants.NOTIFICATION_ID,1);
+        notificationIntent.putExtra(Constants.NOTIFICATION, notification);
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                getContext(),
+                0,
+                notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        long notificationTime = Converters.dateToTimestamp(viewModel_.GetReminderData().getValue().Time);
+
+        long notificationTime =
+                Converters.dateToTimestamp(viewModel_.GetReminderData().getValue().Time);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, notificationTime, pendingIntent);
     }
 
@@ -121,14 +135,20 @@ public class NewReminderFragment extends Fragment {
 
         Intent intent = new Intent(getContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(getContext(), 0, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                getContext(),
+                0,
+                intent,
+                0);
 
-        return new NotificationCompat.Builder(getContext(), DEFAULT_NOTIFICATION_CHANNEL_ID)
+        return new NotificationCompat.Builder(
+                    getContext(),
+                    Constants.DEFAULT_NOTIFICATION_CHANNEL_ID)
                 .setContentTitle(reminder.Title)
                 .setContentText(reminder.Description)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setAutoCancel(true)
-                .setChannelId(NOTIFICATION_CHANNEL_ID)
+                .setChannelId(Constants.NOTIFICATION_CHANNEL_ID)
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentIntent(pendingIntent)
                 .build();

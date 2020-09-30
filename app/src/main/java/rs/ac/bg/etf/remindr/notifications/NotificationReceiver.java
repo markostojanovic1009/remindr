@@ -7,29 +7,30 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import static rs.ac.bg.etf.remindr.views.NewReminderFragment.NOTIFICATION_CHANNEL_ID;
+import rs.ac.bg.etf.remindr.common.Constants;
+
+import static rs.ac.bg.etf.remindr.common.Constants.NOTIFICATION_CHANNEL_ID;
 
 public class NotificationReceiver extends BroadcastReceiver
 {
-    public static final String NOTIFICATION = "NOTIFICATION";
-    public static final String NOTIFICATION_ID = "NOTIFICATION-ID";
-
-
-
     @Override
     public void onReceive(Context context, Intent intent)
     {
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE) ;
-        Notification notification = intent.getParcelableExtra(NOTIFICATION);
+        NotificationManager notificationManager =
+                (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        Notification notification = intent.getParcelableExtra(Constants.NOTIFICATION);
 
         if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES.O )
         {
             int importance = NotificationManager. IMPORTANCE_HIGH;
-            NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME" , importance) ;
+            NotificationChannel notificationChannel = new NotificationChannel(
+                    NOTIFICATION_CHANNEL_ID,
+                    "NOTIFICATION_CHANNEL_NAME",
+                    importance);
             notificationManager.createNotificationChannel(notificationChannel);
         }
 
-        int id = intent.getIntExtra( NOTIFICATION_ID , 0 );
+        int id = intent.getIntExtra(Constants.NOTIFICATION_ID,0);
         notificationManager.notify(id, notification);
     }
 }

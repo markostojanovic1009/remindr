@@ -33,6 +33,7 @@ public interface WebService {
     @GET("/api/reminders")
     Call<List<Reminder>> GetRemindersLaterThan(
             @Header("Authorization") String token,
+            @Query("user") String userEmail,
             @Query("after") long timestamp);
 
     @DELETE("/api/reminders/{id}")
